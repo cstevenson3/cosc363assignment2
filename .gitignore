@@ -1,0 +1,7 @@
+.project
+.settings
+.cproject
+.DS_Store
+*.exe
+assignment2.out
+*.bmp

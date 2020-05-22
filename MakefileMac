@@ -1,0 +1,8 @@
+SRC_DIR := ./src
+OBJ_DIR := ./obj
+SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+LDFLAGS := -L/usr/local/Cellar/freeglut/3.2.1/lib -I/usr/local/Cellar/freeglut/3.2.1/include -I./libraries/include -lglut -framework OpenGL
+
+assignment2.out: $(SRC_FILES)
+	g++ -std=c++11 -o $@ $^ $(LDFLAGS) -w
