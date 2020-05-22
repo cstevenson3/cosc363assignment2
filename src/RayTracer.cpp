@@ -44,8 +44,12 @@ glm::vec3 trace(Ray ray, int step)
 {
 	glm::vec3 backgroundCol(0);						//Background colour = (0,0,0)
 	glm::vec3 lightPos(-20, 50, 0);					//Light's position
+	glm::vec3 lightDir(0.3, 0, -1);
+	float lightAngle = 0.5; // radians
 	glm::vec3 color(0);
 	SceneObject* obj;
+
+	float ambient = 0.2;
 
     ray.closestPt(sceneObjects);					//Compare the ray with all objects in the scene
     if(ray.index == -1) return backgroundCol;		//no intersection
@@ -83,14 +87,18 @@ glm::vec3 trace(Ray ray, int step)
 		}
 	}
 
-	color = obj->lighting(lightPos, -ray.dir, ray.hit);						//Object's colour
+	if(glm::dot(glm::normalize(ray.hit - lightPos), glm::normalize(lightDir)) > cos(lightAngle)) {
+		color = obj->lighting(lightPos, -ray.dir, ray.hit);
+	} else {
+		color = ambient * obj->getColor();
+	}
 
 	glm::vec3 lightVec = lightPos - ray.hit;
 	Ray shadowRay(ray.hit, lightVec);
 	shadowRay.closestPt(sceneObjects);
 
 	if(shadowRay.index > -1 && shadowRay.dist < glm::length(lightVec)) {
-		color = 0.2f * obj->getColor(); //0.2 = ambient scale factor
+		color = ambient * obj->getColor();
 	}
 
 	if (obj->isReflective() && step < MAX_STEPS) {
