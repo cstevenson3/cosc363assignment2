@@ -45,7 +45,7 @@ glm::vec3 trace(Ray ray, int step)
 	glm::vec3 backgroundCol(0);						//Background colour = (0,0,0)
 	glm::vec3 lightPos(-20, 50, 0);					//Light's position
 	glm::vec3 lightDir(0.3, 0, -1);
-	float lightAngle = 0.5; // radians
+	float lightAngle = 2; // radians
 	glm::vec3 color(0);
 	SceneObject* obj;
 
@@ -84,6 +84,35 @@ glm::vec3 trace(Ray ray, int step)
 		{
 			color = beachBallTexture.getColorAt(texcoords, texcoordt);
 			obj->setColor(color);
+		}
+	}
+
+	if(ray.index == 2) {
+		float texcoords = (ray.hit.x - -10)/(10 - -10);
+		float texcoordt = (ray.hit.y - -10)/(10 - -10);
+
+		float a = texcoords * 2 - 1;
+		float b = texcoordt * 2 - 1;
+
+		//Mandelbrot set
+		glm::vec2 c = glm::vec2(a, b);
+		glm::vec2 z = glm::vec2(0, 0);
+		bool bounded = true;
+		for(int i = 0; i < 100; i++) {
+			glm::vec2 temp = glm::vec2(0, 0);
+			temp.x = z.x;
+			temp.y = z.y;
+			z.x = temp.x * temp.x - temp.y * temp.y + c.x;
+			z.y = 2 * temp.x * temp.y + c.y;
+			if(glm::length(z) > 2) {
+				bounded = false;
+				break;
+			}
+		}
+		if(bounded) {
+			obj->setColor(glm::vec3(0.5, 0., 0.5));
+		} else {
+			obj->setColor(glm::vec3(1., 0.5, 0.));
 		}
 	}
 
@@ -201,6 +230,13 @@ void initialize()
 	Sphere *sphere0 = new Sphere(glm::vec3(-10.0, 0.0, -50.0), 2.0);
 	sphere0->setColor(glm::vec3(0, 0, 1));   //Set colour to blue
 	sceneObjects.push_back(sphere0);		 //Add sphere to scene objects
+
+	Plane *plane2 = new Plane (glm::vec3(-10, -10, -45), //Point A
+							glm::vec3(10, -10, -45), //Point B
+							glm::vec3(10, 10, -45), //Point C
+							glm::vec3(-10, 10, -45)); //Point D
+	plane2->setColor(glm::vec3(1, 1, 0));
+	sceneObjects.push_back(plane2);
 
 	Sphere *sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
 	sphere1->setReflectivity(true, 0.8);
