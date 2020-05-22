@@ -33,11 +33,11 @@ float Cylinder::intersect(glm::vec3 p0, glm::vec3 dir)
 	float t1 = (-b - sqrt(delta)) / (2 * a);
 	float t2 = (-b + sqrt(delta)) / (2 * a);
 
-	if(!(t1 < 0.001)) {
+	if(!(t1 < 0.001) && ((p0 + glm::vec3(t1) * dir).y) > baseCenter.y && ((p0 + glm::vec3(t1) * dir).y) < (baseCenter.y + height)) {
 		return t1;
 	}
 
-	if(!(t2 < 0.001)) {
+	if(!(t2 < 0.001) && ((p0 + glm::vec3(t2) * dir).y) > baseCenter.y && ((p0 + glm::vec3(t2) * dir).y) < (baseCenter.y + height)) {
 		return t2;
 	}
 

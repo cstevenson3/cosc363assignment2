@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include "Sphere.h"
 #include "Cylinder.h"
+#include "Cone.h"
 #include "Plane.h"
 #include "SceneObject.h"
 #include "Ray.h"
@@ -190,9 +191,13 @@ void initialize()
 	sphere3->setColor(glm::vec3(0, 1, 0));   //Set colour to green
 	sceneObjects.push_back(sphere3);		 //Add sphere to scene objects
 
-	Cylinder *cylinder1 = new Cylinder(glm::vec3(2.0, 0.0, -50.0), 1.0, 1.0);
-	cylinder1->setColor(glm::vec3(0, 1, 0));   //Set colour to green
-	sceneObjects.push_back(cylinder1);
+//	Cylinder *cylinder1 = new Cylinder(glm::vec3(2.0, 10.0, -50.0), 1.0, 1.0);
+//	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
+//	sceneObjects.push_back(cylinder1);
+
+	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);
+	cone1->setColor(glm::vec3(0.5, 0, 0.5));
+	sceneObjects.push_back(cone1);
 }
 
 
