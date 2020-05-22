@@ -34,7 +34,7 @@ const float YMAX =  HEIGHT * 0.5;
 
 vector<SceneObject*> sceneObjects;
 TextureBMP texture;
-
+TextureBMP beachBallTexture;
 
 //---The most important function in a ray tracer! ---------------------------------- 
 //   Computes the colour value obtained by tracing a ray and finding its 
@@ -66,7 +66,19 @@ glm::vec3 trace(Ray ray, int step)
 		float texcoordt = (ray.hit.z - -60)/(-90 - -60);
 		if(texcoords > 0 && texcoords < 1 && texcoordt > 0 && texcoordt < 1)
 		{
-			color=texture.getColorAt(texcoords, texcoordt);
+			color = texture.getColorAt(texcoords, texcoordt);
+			obj->setColor(color);
+		}
+	}
+
+	if(ray.index == 1) {
+		Sphere* sphere = (Sphere*) obj;
+		//Add code for texture mapping here
+		float texcoords = (sphere->stCoords(ray.hit)).x;
+		float texcoordt = (sphere->stCoords(ray.hit)).y;
+		if(texcoords > 0 && texcoords < 1 && texcoordt > 0 && texcoordt < 1)
+		{
+			color = beachBallTexture.getColorAt(texcoords, texcoordt);
 			obj->setColor(color);
 		}
 	}
@@ -163,7 +175,8 @@ void display()
 //----------------------------------------------------------------------------------
 void initialize()
 {
-	texture = TextureBMP("Butterfly.bmp");
+	texture = TextureBMP("resources/Butterfly.bmp");
+	beachBallTexture = TextureBMP("resources/world_map.bmp");
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(XMIN, XMAX, YMIN, YMAX);
@@ -176,6 +189,10 @@ void initialize()
 							glm::vec3(-20., -15, -200)); //Point D
 	plane->setColor(glm::vec3(1, 1, 0));
 	sceneObjects.push_back(plane);
+
+	Sphere *sphere0 = new Sphere(glm::vec3(-10.0, 0.0, -50.0), 2.0);
+	sphere0->setColor(glm::vec3(0, 0, 1));   //Set colour to blue
+	sceneObjects.push_back(sphere0);		 //Add sphere to scene objects
 
 	Sphere *sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
 	sphere1->setReflectivity(true, 0.8);
@@ -191,9 +208,9 @@ void initialize()
 	sphere3->setColor(glm::vec3(0, 1, 0));   //Set colour to green
 	sceneObjects.push_back(sphere3);		 //Add sphere to scene objects
 
-//	Cylinder *cylinder1 = new Cylinder(glm::vec3(2.0, 10.0, -50.0), 1.0, 1.0);
-//	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
-//	sceneObjects.push_back(cylinder1);
+	Cylinder *cylinder1 = new Cylinder(glm::vec3(2.0, 6.0, -50.0), 1.0, 1.0);
+	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
+	sceneObjects.push_back(cylinder1);
 
 	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);
 	cone1->setColor(glm::vec3(0.5, 0, 0.5));

@@ -45,3 +45,21 @@ glm::vec3 Sphere::normal(glm::vec3 p)
     n = glm::normalize(n);
     return n;
 }
+
+/**
+ * The st texture coords at point p
+ */
+glm::vec2 Sphere::stCoords(glm::vec3 p) {
+	glm::vec3 dir = p - center;
+	float t = dir.y / (2 * radius) + 0.5;
+	float s = asin(dir.x / sqrt((radius * radius) - (dir.y * dir.y)));
+	if(dir.z < 0) {
+		if(dir.x > 0) {
+			s = 3.141 - s;
+		} else {
+			s = -3.141 - s;
+		}
+	}
+	s = s / (2 * 3.141) + 0.5;
+	return glm::vec2(s, t);
+}
