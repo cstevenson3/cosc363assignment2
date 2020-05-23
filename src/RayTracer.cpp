@@ -88,16 +88,17 @@ glm::vec3 trace(Ray ray, int step)
 	}
 
 	if(ray.index == 2) {
-		float texcoords = (ray.hit.x - -10)/(10 - -10);
-		float texcoordt = (ray.hit.y - -10)/(10 - -10);
+		float texcoords = (ray.hit.x - 5)/(10 - 5);
+		float texcoordt = (ray.hit.y - -10)/(-5 - -10);
 
-		float a = texcoords * 2 - 1;
+		float a = texcoords * 3 - 2;
 		float b = texcoordt * 2 - 1;
 
 		//Mandelbrot set
 		glm::vec2 c = glm::vec2(a, b);
 		glm::vec2 z = glm::vec2(0, 0);
 		bool bounded = true;
+		int iterations = 0;
 		for(int i = 0; i < 100; i++) {
 			glm::vec2 temp = glm::vec2(0, 0);
 			temp.x = z.x;
@@ -106,13 +107,14 @@ glm::vec3 trace(Ray ray, int step)
 			z.y = 2 * temp.x * temp.y + c.y;
 			if(glm::length(z) > 2) {
 				bounded = false;
+				iterations = i;
 				break;
 			}
 		}
 		if(bounded) {
-			obj->setColor(glm::vec3(0.5, 0., 0.5));
+			obj->setColor(glm::vec3(0., 0., 0.));
 		} else {
-			obj->setColor(glm::vec3(1., 0.5, 0.));
+			obj->setColor(glm::vec3(2 * iterations / 100.) * glm::vec3(0., 1., 0.) + glm::vec3(1., 0., 0.));
 		}
 	}
 
@@ -128,6 +130,13 @@ glm::vec3 trace(Ray ray, int step)
 
 	if(shadowRay.index > -1 && shadowRay.dist < glm::length(lightVec)) {
 		color = ambient * obj->getColor();
+	}
+
+	if(obj->isTransparent()) {
+		float rho = obj->getTransparencyCoeff();
+		Ray transmittedRay = Ray(ray.hit, ray.dir);
+		glm::vec3 transmittedColor = trace(transmittedRay, step + 1);
+		color = (1 - rho) * color + rho * transmittedColor;
 	}
 
 	if (obj->isReflective() && step < MAX_STEPS) {
@@ -231,10 +240,10 @@ void initialize()
 	sphere0->setColor(glm::vec3(0, 0, 1));   //Set colour to blue
 	sceneObjects.push_back(sphere0);		 //Add sphere to scene objects
 
-	Plane *plane2 = new Plane (glm::vec3(-10, -10, -45), //Point A
+	Plane *plane2 = new Plane (glm::vec3(5, -10, -45), //Point A
 							glm::vec3(10, -10, -45), //Point B
-							glm::vec3(10, 10, -45), //Point C
-							glm::vec3(-10, 10, -45)); //Point D
+							glm::vec3(10, -5, -45), //Point C
+							glm::vec3(5, -5, -45)); //Point D
 	plane2->setColor(glm::vec3(1, 1, 0));
 	sceneObjects.push_back(plane2);
 
@@ -252,8 +261,9 @@ void initialize()
 	sphere3->setColor(glm::vec3(0, 1, 0));   //Set colour to green
 	sceneObjects.push_back(sphere3);		 //Add sphere to scene objects
 
-	Cylinder *cylinder1 = new Cylinder(glm::vec3(2.0, 6.0, -50.0), 1.0, 1.0);
+	Cylinder *cylinder1 = new Cylinder(glm::vec3(0.0, 4.0, -40.0), 1.0, 1.0);
 	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
+	cylinder1->setTransparency(true, 0.5);
 	sceneObjects.push_back(cylinder1);
 
 	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);
