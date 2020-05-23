@@ -129,7 +129,7 @@ glm::vec3 trace(Ray ray, int step)
 	shadowRay.closestPt(sceneObjects);
 
 	if(shadowRay.index > -1 && shadowRay.dist < glm::length(lightVec)) {
-		color = ambient * obj->getColor();
+		color = (ambient + (1 - ambient) * sceneObjects[shadowRay.index]->getTransparencyCoeff()) * obj->getColor();
 	}
 
 	if(obj->isTransparent()) {
@@ -261,9 +261,9 @@ void initialize()
 	sphere3->setColor(glm::vec3(0, 1, 0));   //Set colour to green
 	sceneObjects.push_back(sphere3);		 //Add sphere to scene objects
 
-	Cylinder *cylinder1 = new Cylinder(glm::vec3(0.0, 4.0, -40.0), 1.0, 1.0);
+	Cylinder *cylinder1 = new Cylinder(glm::vec3(-4.0, 4.0, -70.0), 1.0, 1.0);
 	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
-	cylinder1->setTransparency(true, 0.5);
+//	cylinder1->setTransparency(true, 0.5);
 	sceneObjects.push_back(cylinder1);
 
 	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);

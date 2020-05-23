@@ -25,7 +25,7 @@ protected:
 	bool tran_ = false;  //transparency: true/false
 	float reflc_ = 0.8;  //coefficient of reflection
 	float refrc_ = 0.8;  //coefficient of refraction
-	float tranc_ = 0.8;  //coefficient of transparency
+	float tranc_ = 0.0;  //coefficient of transparency
 	float refri_ = 1.0;  //refractive index
 	float shin_ = 50.0; //shininess
 public:
