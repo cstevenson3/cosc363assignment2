@@ -14,6 +14,7 @@
 #include "Cylinder.h"
 #include "Cone.h"
 #include "Plane.h"
+#include "Cube.h"
 #include "SceneObject.h"
 #include "Ray.h"
 #include "TextureBMP.h"
@@ -269,6 +270,12 @@ void initialize()
 	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);
 	cone1->setColor(glm::vec3(0.5, 0, 0.5));
 	sceneObjects.push_back(cone1);
+
+	Cube* cube = new Cube(glm::vec3(-3.0, -4.0, -30.0), 2);
+	Plane* planes = cube->planes();
+	for(int i = 0; i < 6; i++) {
+		sceneObjects.push_back(&(planes[i]));
+	}
 }
 
 
