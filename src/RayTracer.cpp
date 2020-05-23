@@ -57,15 +57,15 @@ glm::vec3 trace(Ray ray, int step)
 
 	if (ray.index == 0)
 	{
-		 //Stripe pattern
+		 //checker pattern
 		 int stripeWidth = 5;
+		 int ix = (ray.hit.x) / stripeWidth;
 		 int iz = (ray.hit.z) / stripeWidth;
-		 int k = iz % 2; //2 colors
+		 int k = (iz + ix) % 2; //2 colors
 		 if (k == 0) color = glm::vec3(0, 1, 0);
 		 else color = glm::vec3(1, 1, 0.5);
 		 obj->setColor(color);
 
-		//Add code for texture mapping here
 		float texcoords = (ray.hit.x - -15)/(5 - -15);
 		float texcoordt = (ray.hit.z - -60)/(-90 - -60);
 		if(texcoords > 0 && texcoords < 1 && texcoordt > 0 && texcoordt < 1)
