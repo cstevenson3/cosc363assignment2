@@ -26,7 +26,7 @@ const bool AA = true;
 const float WIDTH = 40.0;
 const float HEIGHT = 40.0;
 const float EDIST = 40.0;
-const int NUMDIV = 500;
+const int NUMDIV = 650;
 const int MAX_STEPS = 5;
 const float XMIN = -WIDTH * 0.5;
 const float XMAX =  WIDTH * 0.5;
@@ -115,7 +115,7 @@ glm::vec3 trace(Ray ray, int step)
 		if(bounded) {
 			obj->setColor(glm::vec3(0., 0., 0.));
 		} else {
-			obj->setColor(glm::vec3(2 * iterations / 100.) * glm::vec3(0., 1., 0.) + glm::vec3(1., 0., 0.));
+			obj->setColor(glm::vec3(2 * iterations / 100.) * glm::vec3(0., 1., 0.) + glm::vec3(0., 0., 1.));
 		}
 	}
 
@@ -275,6 +275,7 @@ void initialize()
 	Cube* cube = new Cube(glm::vec3(-19.0, -5.0, -50.0), 6);
 	Plane* planes = cube->planes();
 	for(int i = 0; i < 6; i++) {
+		(planes[i]).setColor(glm::vec3(1., 0.5, 0.));
 		sceneObjects.push_back(&(planes[i]));
 	}
 }
@@ -283,7 +284,7 @@ void initialize()
 int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB );
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(650, 650);
     glutInitWindowPosition(20, 20);
     glutCreateWindow("Raytracing");
 
