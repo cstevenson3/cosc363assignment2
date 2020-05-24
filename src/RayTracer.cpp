@@ -23,8 +23,8 @@ using namespace std;
 
 const bool AA = true;
 
-const float WIDTH = 20.0;  
-const float HEIGHT = 20.0;
+const float WIDTH = 40.0;
+const float HEIGHT = 40.0;
 const float EDIST = 40.0;
 const int NUMDIV = 500;
 const int MAX_STEPS = 5;
@@ -35,7 +35,7 @@ const float YMAX =  HEIGHT * 0.5;
 
 vector<SceneObject*> sceneObjects;
 TextureBMP texture;
-TextureBMP beachBallTexture;
+TextureBMP earthTexture;
 
 //---The most important function in a ray tracer! ---------------------------------- 
 //   Computes the colour value obtained by tracing a ray and finding its 
@@ -44,7 +44,7 @@ TextureBMP beachBallTexture;
 glm::vec3 trace(Ray ray, int step)
 {
 	glm::vec3 backgroundCol(0);						//Background colour = (0,0,0)
-	glm::vec3 lightPos(-20, 50, 0);					//Light's position
+	glm::vec3 lightPos(-30, 50, 0);					//Light's position
 	glm::vec3 lightDir(0.3, 0, -1);
 	float lightAngle = 2; // radians
 	glm::vec3 color(0);
@@ -67,8 +67,8 @@ glm::vec3 trace(Ray ray, int step)
 		 else color = glm::vec3(1, 1, 0.5);
 		 obj->setColor(color);
 
-		float texcoords = (ray.hit.x - -15)/(5 - -15);
-		float texcoordt = (ray.hit.z - -60)/(-90 - -60);
+		float texcoords = (ray.hit.x - -15)/(15 - -15);
+		float texcoordt = (ray.hit.z - -40)/(-70 - -40);
 		if(texcoords > 0 && texcoords < 1 && texcoordt > 0 && texcoordt < 1)
 		{
 			color = texture.getColorAt(texcoords, texcoordt);
@@ -83,14 +83,14 @@ glm::vec3 trace(Ray ray, int step)
 		float texcoordt = (sphere->stCoords(ray.hit)).y;
 		if(texcoords > 0 && texcoords < 1 && texcoordt > 0 && texcoordt < 1)
 		{
-			color = beachBallTexture.getColorAt(texcoords, texcoordt);
+			color = earthTexture.getColorAt(texcoords, texcoordt);
 			obj->setColor(color);
 		}
 	}
 
 	if(ray.index == 2) {
-		float texcoords = (ray.hit.x - 5)/(10 - 5);
-		float texcoordt = (ray.hit.y - -10)/(-5 - -10);
+		float texcoords = (ray.hit.x - 12)/(22 - 12);
+		float texcoordt = (ray.hit.y - -10)/(0 - -10);
 
 		float a = texcoords * 3 - 2;
 		float b = texcoordt * 2 - 1;
@@ -223,55 +223,56 @@ void display()
 void initialize()
 {
 	texture = TextureBMP("resources/Butterfly.bmp");
-	beachBallTexture = TextureBMP("resources/world_map.bmp");
+	earthTexture = TextureBMP("resources/world_map.bmp");
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(XMIN, XMAX, YMIN, YMAX);
 
     glClearColor(0, 0, 0, 1);
 
-    Plane *plane = new Plane (glm::vec3(-20., -15, -40), //Point A
-							glm::vec3(20., -15, -40), //Point B
-							glm::vec3(20., -15, -200), //Point C
-							glm::vec3(-20., -15, -200)); //Point D
+    Plane *plane = new Plane (glm::vec3(-40., -15, 0), //Point A
+							glm::vec3(40., -15, 0), //Point B
+							glm::vec3(40., -15, -100), //Point C
+							glm::vec3(-40., -15, -100)); //Point D
 	plane->setColor(glm::vec3(1, 1, 0));
 	sceneObjects.push_back(plane);
 
-	Sphere *sphere0 = new Sphere(glm::vec3(-10.0, 0.0, -50.0), 2.0);
-	sphere0->setColor(glm::vec3(0, 0, 1));   //Set colour to blue
-	sceneObjects.push_back(sphere0);		 //Add sphere to scene objects
+	//earth
+	Sphere *sphere0 = new Sphere(glm::vec3(7.0, -5.0, -50.0), 3.0);
+	sphere0->setColor(glm::vec3(0, 0, 1));
+	sceneObjects.push_back(sphere0);
 
-	Plane *plane2 = new Plane (glm::vec3(5, -10, -45), //Point A
-							glm::vec3(10, -10, -45), //Point B
-							glm::vec3(10, -5, -45), //Point C
-							glm::vec3(5, -5, -45)); //Point D
+	Plane *plane2 = new Plane (glm::vec3(12, -10, -50), //Point A
+							glm::vec3(22, -10, -50), //Point B
+							glm::vec3(22, 0, -50), //Point C
+							glm::vec3(12, 0, -50)); //Point D
 	plane2->setColor(glm::vec3(1, 1, 0));
 	sceneObjects.push_back(plane2);
 
 	Sphere *sphere1 = new Sphere(glm::vec3(-5.0, 0.0, -90.0), 15.0);
 	sphere1->setReflectivity(true, 0.8);
-	sphere1->setColor(glm::vec3(0, 0, 1));   //Set colour to blue
-	sceneObjects.push_back(sphere1);		 //Add sphere to scene objects
+	sphere1->setColor(glm::vec3(0, 0, 1));
+	sceneObjects.push_back(sphere1);
 
-	Sphere *sphere2 = new Sphere(glm::vec3(2.0, 2.0, -70.0), 2.0);
-	sphere2->setReflectivity(true, 0.8);
-	sphere2->setColor(glm::vec3(1, 0, 0));   //Set colour to red
-	sceneObjects.push_back(sphere2);		 //Add sphere to scene objects
+//	Sphere *sphere2 = new Sphere(glm::vec3(2.0, 2.0, -70.0), 2.0);
+//	sphere2->setReflectivity(true, 0.8);
+//	sphere2->setColor(glm::vec3(1, 0, 0));   //Set colour to red
+//	sceneObjects.push_back(sphere2);		 //Add sphere to scene objects
 
-	Sphere *sphere3 = new Sphere(glm::vec3(2.0, 7.0, -65.0), 2.0);
-	sphere3->setColor(glm::vec3(0, 1, 0));   //Set colour to green
-	sceneObjects.push_back(sphere3);		 //Add sphere to scene objects
+	Sphere *sphere3 = new Sphere(glm::vec3(-10.0, -5.0, -50.0), 3.0);
+	sphere3->setColor(glm::vec3(1., 0., 0.));
+	sphere3->setTransparency(true, 0.7);
+	sceneObjects.push_back(sphere3);
 
-	Cylinder *cylinder1 = new Cylinder(glm::vec3(-4.0, 4.0, -70.0), 1.0, 1.0);
+	Cylinder *cylinder1 = new Cylinder(glm::vec3(1.0, -7.0, -50.0), 2.0, 4.0);
 	cylinder1->setColor(glm::vec3(0.5, 0, 0.5));
-//	cylinder1->setTransparency(true, 0.5);
 	sceneObjects.push_back(cylinder1);
 
-	Cone *cone1 = new Cone(glm::vec3(2.0, 8.0, -50.0), 1.0, 3.0);
+	Cone *cone1 = new Cone(glm::vec3(-5.0, -3.0, -50.0), 2.0, 4.0);
 	cone1->setColor(glm::vec3(0.5, 0, 0.5));
 	sceneObjects.push_back(cone1);
 
-	Cube* cube = new Cube(glm::vec3(-3.0, -4.0, -30.0), 2);
+	Cube* cube = new Cube(glm::vec3(-19.0, -5.0, -50.0), 6);
 	Plane* planes = cube->planes();
 	for(int i = 0; i < 6; i++) {
 		sceneObjects.push_back(&(planes[i]));
