@@ -46,7 +46,7 @@ glm::vec3 trace(Ray ray, int step)
 	glm::vec3 backgroundCol(0);						//Background colour = (0,0,0)
 	glm::vec3 lightPos(-30, 50, 0);					//Light's position
 	glm::vec3 lightDir(0.3, 0, -1);
-	float lightAngle = 2; // radians
+	float lightAngle = 1; // radians
 	glm::vec3 color(0);
 	SceneObject* obj;
 
